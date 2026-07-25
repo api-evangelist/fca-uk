@@ -1,0 +1,152 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://www.fca.org.uk/firms/financial-services-register ;
+  https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf ;
+  https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf ;
+  live anonymous probes
+note: >-
+  The FCA runs two unrelated API surfaces with different conventions. Neither is
+  described by an OpenAPI document, so everything below is either taken from an
+  FCA published page/technical specification or observed in a live anonymous
+  request, with the source named per item.
+surfaces:
+- api: FCA Financial Services Register API
+  base_url: https://register.fca.org.uk/services/V0.1
+  style: REST, read-only, JSON
+  authentication:
+    style: api key in two request headers (X-Auth-Email, X-Auth-Key)
+    artifact: authentication/fca-uk-authentication.yml
+  versioning:
+    scheme: uri-path
+    current: V0.1
+    note: >-
+      The version segment has been V0.1 since the API was introduced; the FCA
+      publishes no version policy, no version-negotiation header and no
+      deprecation schedule.
+  resource_model:
+    addressing: >-
+      Resources are addressed by regulatory identifier — Firm Reference Number
+      (FRN) for firms, Individual Reference Number (IRN) for individuals,
+      Product Reference Number (PRN) for collective investment schemes.
+    lookup_shape: one entity per request; there is no bulk or list-all operation
+    bulk_alternative:
+      name: Register Extract Service (RES)
+      url: https://www.fca.org.uk/firms/financial-services-register/data-extract
+      note: paid file delivery, the FCA's stated answer to the single-entity design limit
+  pagination:
+    supported: unknown
+    note: >-
+      No pagination contract is documented on any anonymously reachable FCA page.
+      Community clients surface a ResultInfo block on search responses, but the
+      FCA's own reference is behind the portal login, so nothing is asserted here.
+  content_negotiation:
+    request_header: 'Accept: application/json'
+    response: application/json
+  idempotency:
+    supported: false
+    reason: >-
+      Read-only API. Every documented operation is a GET; there is no write
+      surface and therefore no idempotency key contract. No Idempotency pointer
+      is wired in apis.yml — its absence here is correct, not a gap.
+  rate_limiting:
+    documented: true
+    limit: 50 requests per 10 seconds
+    signalling: no documented rate-limit response headers
+    artifact: rate-limits/fca-uk-rate-limits.yml
+    confidence: medium
+    source_note: >-
+      The figure is stated in community client documentation and in the portal
+      material; the FCA's own statement of it sits behind the developer portal
+      login and could not be verified anonymously.
+  error_envelope:
+    shape: '{"Success":"false", "<message>"}'
+    media_type: application/json
+    rfc9457: false
+    observed:
+      request: GET https://register.fca.org.uk/services/V0.1/Firm/122702
+      status: 403
+      body: '{"Success":"false", "Sorry, this page is not available. Missing Headers."}'
+    artifact: errors/fca-uk-problem-types.yml
+  request_tracing:
+    request_id_header: none observed
+- api: FCA Data Publication API (FIRDS / FITRS)
+  base_url: https://api.data.fca.org.uk
+  style: OpenSearch/Elasticsearch query-string search over published file artefacts
+  authentication:
+    style: none (anonymous)
+  versioning:
+    scheme: none
+    note: The index name is the resource; no version segment exists.
+  resource_model:
+    indices:
+    - fca_data_firds_files
+    - fca_data_fitrs_files
+    note: >-
+      Only these two indices, the two the FCA documents, respond anonymously.
+      Every other index name probed returns 403 "Missing Authentication Token".
+  query_parameters:
+  - name: q
+    required: true
+    description: >-
+      Elasticsearch query_string query. FIRDS searchable fields are file_type,
+      file_name, publication_date; FITRS adds instrument_type. Wildcards and
+      range syntax (publication_date:[YYYY-MM-DD TO YYYY-MM-DD]) are supported.
+    source: FCA FIRDS/FITRS technical specifications, section 3.7
+  - name: from
+    required: true
+    default: 0
+    description: starting index of the hits to return
+  - name: size
+    required: true
+    default: 10
+    description: number of hits to return
+  - name: sort
+    required: false
+    description: fieldName or fieldName:asc / fieldName:desc; multiple sort params allowed, order significant
+  - name: pretty
+    required: false
+    description: pretty-print the JSON response
+  - name: df
+    required: false
+    description: default field when the query term carries no field prefix
+  - name: default_operator
+    required: false
+    default: OR
+    description: AND or OR
+  pagination:
+    style: offset
+    params: [from, size]
+    response_field: hits.total
+    note: >-
+      The FCA technical specification describes cycling by advancing `from` in
+      `size`-sized pages; hits.total gives the number of records found.
+  response_envelope:
+    shape: standard Elasticsearch search response
+    fields: [took, timed_out, _shards, hits.total, hits.max_score, 'hits.hits[]._source']
+    record_fields: [download_link, file_type, file_name, publication_date, last_refreshed]
+    fitrs_extra_field: instrument_type
+    media_type: application/json
+    note: JSON is the only format available; the technical specification states this explicitly.
+  idempotency:
+    supported: false
+    reason: read-only GET search interface; no write surface
+  rate_limiting:
+    documented: true
+    limit: unquantified
+    quote: >-
+      "To minimise disruption to the FCA FIRDS service caused by irregular traffic
+      patterns, malicious (e.g. DDOS) or accidental, all requests to both the UI
+      Web Form and the API service will be rate limited." — FCA FIRDS technical
+      specification, section 1.1 Acceptable Use. Individual file download links
+      are explicitly excluded from throttling.
+  error_envelope:
+    shape: '{"message":"Missing Authentication Token"}'
+    status_observed: 403
+    rfc9457: false
+cross_links:
+  authentication: authentication/fca-uk-authentication.yml
+  errors: errors/fca-uk-problem-types.yml
+  lifecycle: lifecycle/fca-uk-lifecycle.yml
+  rate_limits: rate-limits/fca-uk-rate-limits.yml
+  data_model: data-model/fca-uk-data-model.yml

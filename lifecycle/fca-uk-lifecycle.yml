@@ -1,0 +1,64 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://www.fca.org.uk/firms/financial-services-register ;
+  https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf ;
+  live probes
+note: >-
+  The FCA operates its APIs as free public utilities and publishes no lifecycle
+  commitments of any kind. Every negative below was probed, not assumed.
+versioning:
+- api: FCA Financial Services Register API
+  scheme: uri-path
+  current: V0.1
+  policy_url: null
+  note: >-
+    V0.1 has been the only version segment since the API was introduced. No
+    version policy, no version-negotiation header, no announced successor.
+- api: FCA Data Publication API (FIRDS / FITRS)
+  scheme: none
+  current: null
+  note: The index name is the resource; there is no version segment.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no
+    deprecated operations are documented or observable. No Deprecation pointer is
+    wired in apis.yml because the FCA publishes no such policy.
+sla:
+  url: null
+  uptime_target: null
+  present: false
+  quote: >-
+    "As the API is a free service, we do not offer any service-level agreements
+    (SLAs) or guarantees for uptime or issue resolution."
+  source: https://www.fca.org.uk/firms/financial-services-register
+status_page:
+  url: null
+  present: false
+  probes:
+  - url: https://status.fca.org.uk
+    status: '000 (no DNS)'
+  - url: https://www.fca.org.uk/status
+    status: '404'
+  - url: https://www.fca.org.uk/firms/systems-status
+    status: '404'
+  note: >-
+    The FCA has no public status page. System availability is communicated to
+    signed-in firms inside the My FCA portal, not publicly. No StatusPage pointer
+    is wired in apis.yml.
+changelog:
+  present: false
+  note: >-
+    No API changelog or release notes. The FS Register web page carries a dated
+    "Page updates" list (last entry 13/02/2026), but that tracks edits to the
+    web page, not to the API contract. The FIRDS technical specification is
+    dated July 2020 and carries no revision history.
+support:
+  contact: https://www.fca.org.uk/contact
+  note: >-
+    General FCA contact routes only; there is no developer support channel,
+    community forum or issue tracker for either API.
+deprecated_operations: []

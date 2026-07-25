@@ -1,0 +1,66 @@
+generated: '2026-07-25'
+method: searched
+source: PyPI, npm, Packagist and GitHub registry probes
+note: >-
+  The FCA publishes NO first-party SDK or client library in any language. Every
+  package below is community maintained and is recorded here only so the
+  ecosystem around the Financial Services Register API is visible; none of them
+  is official, so no `SDKs` pointer is wired in apis.yml. Registries probed with
+  no first-party result: npm, PyPI, Maven Central, NuGet, pkg.go.dev, RubyGems,
+  Packagist, crates.io. No official FCA GitHub organisation exists (api.github.com
+  /orgs/FCA-UK and /orgs/financial-conduct-authority both 404).
+official_sdks: false
+packages:
+- language: python
+  registry: pypi
+  name: fsrapiclient
+  version: 0.5.2
+  url: https://pypi.org/project/fsrapiclient/
+  install: pip install fsrapiclient
+  repository: https://github.com/sr-murthy/fsrapiclient
+  docs: https://fsrapiclient.readthedocs.io
+  maintainer: S. R. Murthy
+  official: false
+  covers: FCA Financial Services Register API (register.fca.org.uk/services/V0.1)
+- language: python
+  registry: pypi
+  name: financial-services-register-api
+  version: 1.3.1
+  url: https://pypi.org/project/financial-services-register-api/
+  install: pip install financial-services-register-api
+  repository: https://github.com/sr-murthy/financial-services-register-api
+  docs: https://financial-services-register-api.readthedocs.io/en/latest/
+  maintainer: S. R. Murthy
+  official: false
+  covers: FCA Financial Services Register API (register.fca.org.uk/services/V0.1)
+- language: python
+  registry: pypi
+  name: fca-api
+  version: 2.0.0
+  url: https://pypi.org/project/fca-api/
+  install: pip install fca-api
+  repository: https://github.com/release-art/fca-api/
+  docs: https://docs.release.art/fca-api/
+  maintainer: I. Orlovs / S. R. Murthy
+  official: false
+  covers: FCA Financial Services Register API (register.fca.org.uk/services/V0.1)
+- language: php
+  registry: packagist
+  name: cyborgfinance/fcaregisterlaravel
+  url: https://packagist.org/packages/cyborgfinance/fcaregisterlaravel
+  install: composer require cyborgfinance/fcaregisterlaravel
+  repository: https://github.com/CyborgFinance/FCARegisterLaravel
+  official: false
+  covers: FCA Financial Services Register API, Laravel wrapper
+other_distribution:
+- name: Microsoft Power Platform independent-publisher connector
+  official: false
+  note: Independent-publisher connector wrapping the FS Register API; not FCA published.
+- name: Register Extract Service (RES)
+  url: https://www.fca.org.uk/firms/financial-services-register/data-extract
+  official: true
+  kind: paid bulk file delivery
+  note: >-
+    The FCA's own commercial answer to the Register API's one-entity-per-lookup
+    limit — a subscription or one-off data cut delivered as files, not a package
+    or an API.

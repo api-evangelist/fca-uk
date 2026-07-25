@@ -1,0 +1,53 @@
+generated: '2026-07-25'
+method: searched
+source: live probes of the FCA host .well-known surface
+note: >-
+  Probed every host the FCA exposes: the Financial Services Register host
+  (register.fca.org.uk, a Salesforce Experience Cloud site), the corporate site
+  (www.fca.org.uk), the data publication host (data.fca.org.uk) and the data
+  query host (api.data.fca.org.uk). Only one document resolves anonymously — the
+  OpenID Connect discovery document served by the Salesforce platform that hosts
+  the Register site. It governs login to the developer portal, NOT the Register
+  API, which authenticates with X-Auth-Email / X-Auth-Key request headers. It
+  must not be read as an FCA-designed OAuth surface. No RFC 9116 security.txt
+  and no RFC 9727 api-catalog is published on any FCA host.
+hosts:
+- host: https://register.fca.org.uk
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: fca-uk-openid-configuration.json
+    note: >-
+      Salesforce Experience Cloud OIDC metadata. issuer https://register.fca.org.uk,
+      authorization_endpoint /services/oauth2/authorize, token_endpoint
+      /services/oauth2/token, jwks_uri /id/keys. The scopes_supported list is the
+      stock Salesforce platform set (api, web, openid, refresh_token, cdp_api,
+      wave_api, pardot_api, chatter_api, mcp_api, ...) and is not a Register API
+      scope model.
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+  - path: /.well-known/oauth-protected-resource
+    status: 401
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+- host: https://www.fca.org.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: https://data.fca.org.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+security_txt:
+  present: false
+  note: >-
+    No RFC 9116 security.txt on any FCA host, and no separate responsible
+    disclosure / vulnerability disclosure page was found (probed
+    /security, /responsible-disclosure, /vulnerability-disclosure,
+    /report-vulnerability — all 404). Absence is the finding.

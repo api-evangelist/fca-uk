@@ -45,12 +45,41 @@ Read-only REST API over the Financial Services Register, the FCA's public record
 - [API Reference](https://register.fca.org.uk/Developer/s/)
 - [Website](https://register.fca.org.uk/s/)
 
+### FCA Data Publication API (FIRDS / FITRS)
+
+Anonymous machine-to-machine query interface over the file artefacts published through data.fca.org.uk, documented in the FCA's own FIRDS and FITRS technical specifications. It is an OpenSearch/Elasticsearch query-string search — the index name is the resource, and the FCA supports a documented subset of the query_string DSL (`q`, `from`, `size`, `sort`, `pretty`, `df`, `default_operator`). Two indices respond publicly: `fca_data_firds_files` (UK instrument reference data, 11,583 records) and `fca_data_fitrs_files` (UK transparency calculation results, 2,603 records). Every other index name probed returns 403. No credentials, no OpenAPI. Markets reference data, not insurance data.
+
+- **Human URL:** [https://data.fca.org.uk/#/download](https://data.fca.org.uk/#/download)
+- **Base URL:** `https://api.data.fca.org.uk`
+
+#### Properties
+
+- [Documentation — FCA FIRDS technical specification](https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf)
+- [API Reference — FCA FITRS technical specification](https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf)
+- [Website](https://data.fca.org.uk/)
+
+## Artifacts
+
+Captured by the API Evangelist enrichment pipeline on 2026-07-25. No OpenAPI, GraphQL, AsyncAPI, gRPC, webhook, SDK, CLI, sandbox, Postman collection, MCP server or agent skill exists on any FCA property, so none is fabricated here.
+
+- [Authentication profile](authentication/fca-uk-authentication.yml) — X-Auth-Email/X-Auth-Key on the Register API, anonymous on the data publication API
+- [API conventions](conventions/fca-uk-conventions.yml)
+- [Error catalog](errors/fca-uk-problem-types.yml) — observed error envelopes, not RFC 9457
+- [Rate limits](rate-limits/fca-uk-rate-limits.yml)
+- [Lifecycle](lifecycle/fca-uk-lifecycle.yml) — no SLA, no status page, no deprecation policy
+- [Conformance](conformance/fca-uk-conformance.yml)
+- [Data model](data-model/fca-uk-data-model.yml)
+- [Packages](packages/fca-uk-packages.yml) — community clients only; the FCA ships no SDK
+- [Well-known surface](well-known/fca-uk-well-known.yml) + [OIDC discovery](well-known/fca-uk-openid-configuration.json) (portal login, not the API)
+- [Domain security probe](security/fca-uk-domain-security.yml)
+- [llms.txt](llms/fca-uk-llms.txt)
+
 ## Insurance API posture
 
 This is a regulator record, not a carrier record. The honest findings as of 2026-07-25:
 
 - **No insurance API.** The FCA publishes no quote, bind, issue or FNOL surface, and no insurance product or claims API. That is expected — it does not underwrite.
-- **One real public API.** The Financial Services Register API is genuine, free and self-serve, but its documentation is behind a Salesforce registration login and no OpenAPI definition is published.
+- **Two real public APIs, neither about insurance products.** The Financial Services Register API is genuine, free and self-serve, but its documentation is behind a Salesforce registration login. The FIRDS/FITRS data publication API is anonymous and documented in FCA technical specifications, but it publishes markets reference data. Neither has an OpenAPI definition.
 - **No ACORD.** A site search of fca.org.uk for "ACORD" returns zero results. The FCA does not reference ACORD, AL3, ACORD XML or NGDS anywhere in its published material.
 - **No open-insurance mandate.** The FCA's *Open finance: our vision for a smart data future* roadmap (14 April 2026) names insurance as an in-scope sector, but it is a roadmap and not a rule; the formal discussion paper on the first scheme is not due until Q4 2026.
 - **Insurance data is spreadsheets.** General Insurance Value Measures data is published as XLSX downloads, not as an API.

@@ -1,0 +1,93 @@
+generated: '2026-07-25'
+method: searched
+source: live anonymous probes of both FCA API surfaces + FCA FIRDS/FITRS technical specifications
+format: proprietary
+rfc9457: false
+note: >-
+  The FCA publishes no error reference on any anonymously reachable page and no
+  OpenAPI to derive responses from. Every entry below was observed in a live
+  request on 2026-07-25 or is stated in an FCA published technical specification.
+  Neither surface uses application/problem+json.
+envelopes:
+- api: FCA Financial Services Register API
+  shape: '{"Success":"false", "<human message>"}'
+  media_type: application/json
+  note: >-
+    A flat object whose first member is a string "Success" flag; the failure
+    message is a bare second string member rather than a keyed field.
+- api: FCA Data Publication API (FIRDS / FITRS)
+  shape: '{"message":"<AWS API Gateway message>"}'
+  media_type: application/json
+  note: AWS API Gateway default error body in front of the OpenSearch service.
+problems:
+- status: 403
+  api: FCA Financial Services Register API
+  title: Missing Headers
+  body: '{"Success":"false", "Sorry, this page is not available. Missing Headers."}'
+  meaning: The X-Auth-Email and/or X-Auth-Key request headers were absent.
+  remediation: >-
+    Register free of charge at https://register.fca.org.uk/Developer/s/, generate
+    an API key from the profile, and send both X-Auth-Email and X-Auth-Key on
+    every request.
+  observed:
+    request: GET https://register.fca.org.uk/services/V0.1/Firm/122702
+    date: '2026-07-25'
+- status: 403
+  api: FCA Financial Services Register API
+  title: Missing Headers (sub-resources)
+  meaning: >-
+    Every sub-resource path behaves identically when unauthenticated — /Names,
+    /Individuals, /Permissions, /Requirements, /Passports, /Regulators, /AR,
+    /Address, /Waivers, /Exclusions, /DisciplinaryHistory, /CIS/{PRN}, and the
+    common search path.
+  observed:
+    requests:
+    - GET https://register.fca.org.uk/services/V0.1/Firm/122702/Permissions
+    - GET https://register.fca.org.uk/services/V0.1/Firm/122702/Names
+    - GET https://register.fca.org.uk/services/V0.1/Individuals/MXC29012
+    - GET https://register.fca.org.uk/services/V0.1/CIS/635641
+    date: '2026-07-25'
+  note: >-
+    The gate is blanket: an invented path
+    (/services/V0.1/Firm/122702/Bogus, /services/V0.1/NotAResource/1) returns the
+    same 403 body. Anonymous probing therefore cannot confirm which routes exist —
+    only that everything under /services/V0.1 is auth-gated before routing.
+- status: 401
+  api: FCA Financial Services Register API (host root)
+  title: Unauthorized
+  meaning: >-
+    Non-/services paths on register.fca.org.uk (host root, /.well-known/*,
+    /openapi.json, /llms.txt) return 401 from the Salesforce platform rather
+    than 404.
+  observed:
+    requests:
+    - GET https://register.fca.org.uk/openapi.json
+    - GET https://register.fca.org.uk/.well-known/security.txt
+    date: '2026-07-25'
+- status: 403
+  api: FCA Data Publication API (FIRDS / FITRS)
+  title: Missing Authentication Token
+  body: '{"message":"Missing Authentication Token"}'
+  meaning: >-
+    The requested index is not one of the two the FCA exposes publicly. This is
+    the AWS API Gateway response for an unmatched route, so it means "no such
+    public index" rather than "credentials required".
+  observed:
+    requests:
+    - GET https://api.data.fca.org.uk/fca_data_ssr_current?q=*&size=1
+    - GET https://api.data.fca.org.uk/fca_data_dtr_files?q=*&size=1
+    - GET https://api.data.fca.org.uk/fca_data_firds_instruments?q=*&size=1
+    date: '2026-07-25'
+- status: 429
+  api: both
+  title: Rate limited
+  documented: true
+  meaning: >-
+    Requests are throttled. The FIRDS/FITRS technical specifications state under
+    "Acceptable Use" that all requests to both the web form and the API service
+    are rate limited (file download links are exempt). The FS Register API is
+    documented at 50 requests per 10 seconds.
+  observed: false
+  note: >-
+    Documented, not observed — the pipeline did not deliberately trip the limit.
+    No rate-limit response headers are documented on either surface.

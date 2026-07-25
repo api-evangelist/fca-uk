@@ -1,0 +1,106 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  live probes of both FCA API surfaces ; FCA FIRDS/FITRS technical specifications ;
+  https://register.fca.org.uk/.well-known/openid-configuration
+note: >-
+  Asserted from what was observed or read on FCA published surfaces. Nothing is
+  claimed from an OpenAPI because the FCA publishes none. The FCA is a regulator:
+  it authors conduct rules for others, and publishes no compliance certifications
+  (SOC 2, ISO 27001, PCI DSS) of its own — so no Compliance pointer is wired.
+standards:
+- id: rest-http-json
+  conforms: true
+  evidence: >-
+    Both surfaces are HTTPS GET over JSON; the FS Register API is resource-addressed
+    by regulatory identifier, the data publication API is a query-string search.
+- id: api-key-header-auth
+  conforms: true
+  evidence: X-Auth-Email + X-Auth-Key request headers on the FS Register API
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No OAuth on either API. The only OAuth endpoints on an FCA host belong to the
+    Salesforce Experience Cloud platform that serves the developer portal login.
+- id: oidc-discovery
+  conforms: partial
+  evidence: >-
+    https://register.fca.org.uk/.well-known/openid-configuration returns 200, but
+    it is the Salesforce platform's portal-login metadata, not an FCA-designed
+    identity surface for the API.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 401
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: no /.well-known/security.txt on any FCA host (401/403/404)
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: no /.well-known/api-catalog on any FCA host
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are proprietary JSON — {"Success":"false", "..."} on the Register API,
+    {"message":"Missing Authentication Token"} on the data API. No
+    application/problem+json anywhere.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: no Sunset or Deprecation headers; no deprecation policy published
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI/Swagger document is published. Probed /openapi.json, /swagger.json,
+    /api-docs, /v1/openapi.json against register.fca.org.uk, api.data.fca.org.uk,
+    data.fca.org.uk and www.fca.org.uk — 401/403/404 or a Salesforce HTML shell.
+- id: asyncapi
+  conforms: false
+  evidence: no event, streaming or webhook surface exists on any FCA property
+- id: graphql
+  conforms: false
+  evidence: no /graphql endpoint on any FCA host
+- id: grpc
+  conforms: false
+  evidence: no published .proto definitions
+- id: elasticsearch-query-string-dsl
+  conforms: true
+  evidence: >-
+    The FIRDS/FITRS technical specifications document the supported subset of the
+    Elasticsearch query_string DSL (q, from, size, sort, pretty, df,
+    default_operator) and link the Elasticsearch 6.3 query-string syntax reference.
+- id: iso-8601-dates
+  conforms: true
+  evidence: >-
+    publication_date is YYYY-MM-DD and last_refreshed is an ISO 8601 timestamp in
+    every record returned by the data publication API.
+- id: mifid-ii-firds
+  conforms: true
+  evidence: >-
+    FCA FIRDS publishes UK instrument reference data under the Markets in Financial
+    Instruments (Amendment) (EU Exit) Regulations 2018 and associated Binding
+    Technical Standards, replacing ESMA FIRDS for the UK.
+- id: mifid-ii-fitrs
+  conforms: true
+  evidence: >-
+    FCA FITRS publishes UK transparency calculation results under the same UK MiFID
+    regime, replacing ESMA FITRS for the UK.
+- id: acord
+  conforms: false
+  evidence: >-
+    A site search of fca.org.uk for "ACORD" returns no results. The FCA does not
+    sponsor, mandate or reference insurance data-interchange standards; UK
+    market-wide insurance data standards work sits with the London Market.
+- id: open-banking-uk
+  conforms: false
+  evidence: >-
+    The FCA mandates open banking for firms but publishes no Open Banking API of
+    its own. Its Open Finance vision (14 April 2026) is a roadmap, not a rule; the
+    first discussion paper is due Q4 2026.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No trust centre, no SOC 2 / ISO 27001 / PCI DSS attestation and no
+    vulnerability disclosure programme were found on any FCA host. Probed
+    /security, /responsible-disclosure, /vulnerability-disclosure and
+    trust.fca.org.uk — all miss.

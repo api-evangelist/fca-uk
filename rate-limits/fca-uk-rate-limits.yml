@@ -1,0 +1,47 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf ;
+  https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf ;
+  FS Register developer portal material (mirrored by community client docs)
+note: >-
+  Neither FCA API returns documented rate-limit response headers, and neither
+  publishes a quota, plan or paid tier for API access. Access to both is free.
+rate_limits:
+- api: FCA Financial Services Register API
+  base_url: https://register.fca.org.uk/services/V0.1
+  limit_count: 50
+  limit_window: 10 seconds
+  scope: per API key
+  cost: free
+  headers: none documented
+  confidence: medium
+  note: >-
+    The FCA's own statement of this limit sits behind the developer portal login
+    and could not be verified anonymously; the figure is consistently reported in
+    community client documentation for the API.
+- api: FCA Data Publication API (FIRDS / FITRS)
+  base_url: https://api.data.fca.org.uk
+  limit_count: null
+  limit_window: null
+  scope: per caller
+  cost: free
+  headers: none documented
+  confidence: high
+  quote: >-
+    "To minimise disruption to the FCA FIRDS service caused by irregular traffic
+    patterns, malicious (e.g. DDOS) or accidental, all requests to both the UI Web
+    Form and the API service will be rate limited. The FCA will use this as a basis
+    to optimise the performance of the system... Note: the individual file download
+    links will not be subject to throttling as they are served via a separate
+    solution."
+  note: >-
+    Rate limiting is documented but deliberately unquantified — the FCA reserves
+    the right to tune it. File downloads from data.fca.org.uk/artefacts/ are
+    explicitly exempt.
+sla:
+  present: false
+  quote: >-
+    "As the API is a free service, we do not offer any service-level agreements
+    (SLAs) or guarantees for uptime or issue resolution."
+  source: https://www.fca.org.uk/firms/financial-services-register

@@ -163,23 +163,47 @@ findings:
   grpc:
     present: false
     note: No published .proto files.
-  undocumentedButPublic:
-    - url: https://api.data.fca.org.uk/fca_data_firds_files
-      status: '200'
-      verified: '2026-07-25'
+  dataPublicationApi:
+    correctsEarlierFinding: true
+    correctionDate: '2026-07-25'
+    note: |
+      SUPERSEDES the earlier "undocumented but public" finding. The enrichment
+      round found that the FCA DOES document this interface — in its own
+      published technical specifications, which describe it as the
+      "machine-to-machine interface" for the published files, list the supported
+      query parameters (q, from, size, sort, pretty, df, default_operator), name
+      the searchable fields, show the JSON response document, and set an
+      Acceptable Use rate-limiting policy. It is therefore a documented public
+      FCA API and has been added to apis[] in apis.yml as
+      fca-uk:fca-data-publication-api.
+    baseURL: https://api.data.fca.org.uk
+    documentation:
+      - url: https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf
+        status: '200'
+        note: 'FCA FIRDS, July 2020. Section 3.5 "Access to the files published
+          (machine-to-machine interface)", 3.6 JSON Response Document, 3.7 AWS
+          Elastic Search Parameter Support, 1.1 Acceptable Use (rate limiting).'
+      - url: https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf
+        status: '200'
+        note: FCA FITRS equivalent; adds instrument_type as a searchable field.
+    publicIndices:
+      - index: fca_data_firds_files
+        status: '200'
+        verified: '2026-07-25'
+        hitsTotal: 11583
+        underlyingIndex: fca-firds-downloadfiles
+      - index: fca_data_fitrs_files
+        status: '200'
+        verified: '2026-07-25'
+        hitsTotal: 2603
+        underlyingIndex: fca-fitrs-downloadfiles
+    nonPublicIndices:
       note: |
-        Confirmed live and anonymous. This is the Elasticsearch-backed JSON
-        endpoint behind the data.fca.org.uk download page for UK FIRDS
-        (Financial Instruments Reference Data System) file artefacts. A query of
-        ?q=*&pageSize=1 returns a standard Elasticsearch envelope with 11,583
-        hits over index fca-firds-downloadfiles, each hit carrying download_link,
-        file_type, file_name, publication_date and last_refreshed. It is markets
-        reference data, not insurance data. The FCA publishes NO documentation
-        for it, so it is deliberately excluded from apis[] in apis.yml — it is
-        recorded here as an observed fact only. Sibling index names probed
-        (fca_data_ssr_current, fca_data_firds_instruments, fca_data_dtr,
-        fca_data_rie) and the generic /search path all return 403 "Missing
-        Authentication Token".
+        Every other index name probed returns 403 "Missing Authentication Token"
+        — fca_data_ssr_current, fca_data_ssr_files, fca_data_dtr_files,
+        fca_data_dtr_current, fca_data_mdp_files, fca_data_firds_instruments,
+        fca_data_rie_files. Only the two indices the FCA documents are public.
+    scope: markets reference and transparency data, not insurance data
   thirdPartyEcosystem:
     note: |
       Third parties wrap the Register API — a Python client
@@ -285,15 +309,17 @@ sources:
     note: The FCA Handbook, including ICOBS for insurance conduct. HTML rulebook,
       no API.
 actions:
-  apisListed: 1
+  apisListed: 2
   openapiHarvested: false
   specsSaved: 0
   openapiDirectoryCreated: false
   reason: |
-    One real, documented, self-serve API (the Financial Services Register API)
-    is recorded in apis.yml with its confirmed base URL and its public
-    documentation page. No OpenAPI directory was created because the FCA
-    publishes no specification and nothing verbatim could be harvested. The
-    undocumented api.data.fca.org.uk FIRDS endpoint was deliberately kept out
-    of apis[] because there is no FCA documentation page to point at, and
-    listing it would overstate the regulator's published API surface.
+    Two real, documented, self-serve APIs are recorded in apis.yml with their
+    confirmed base URLs and public documentation: the Financial Services
+    Register API, and the FCA Data Publication API (FIRDS/FITRS) at
+    api.data.fca.org.uk, which the enrichment round found IS documented — in
+    the FCA's own published FIRDS and FITRS technical specifications — and so
+    was promoted from "undocumented but public" into apis[]. No OpenAPI
+    directory was created because the FCA publishes no specification for either
+    API and nothing verbatim could be harvested; deriving one from the technical
+    specifications would attribute a spec to the FCA that it does not publish.

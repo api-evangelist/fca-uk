@@ -12,13 +12,16 @@ description: >-
   appointed representatives, and publishes market-wide insurance data such as the
   annual General Insurance Value Measures. Its API posture is that of a regulator,
   not a carrier: there is no open-insurance obligation in the UK and the FCA
-  publishes no insurance product API of its own. It does operate one genuine public
-  API — the Financial Services Register API at register.fca.org.uk/services/V0.1,
-  which exposes firm, individual and fund authorisation records including insurance
-  permissions and appointed-representative relationships. Access is free and
+  publishes no insurance product API of its own. It does operate two genuine public
+  APIs. The Financial Services Register API at register.fca.org.uk/services/V0.1
+  exposes firm, individual and fund authorisation records including insurance
+  permissions and appointed-representative relationships; access is free and
   self-serve but the developer portal and its reference documentation sit behind a
-  Salesforce registration login, authentication is by X-Auth-Email and X-Auth-Key
-  headers, and no OpenAPI definition is published. Everything else the FCA publishes
+  Salesforce registration login, and authentication is by X-Auth-Email and X-Auth-Key
+  headers. The data publication API at api.data.fca.org.uk is an anonymous
+  OpenSearch-style query interface over FIRDS and FITRS file artefacts, documented in
+  the FCA's own published technical specifications — markets reference data, not
+  insurance data. Neither API has an OpenAPI definition. Everything else the FCA publishes
   for the insurance market is documents and spreadsheets: the Handbook, market
   bulletins, consultation papers, and XLSX data releases. The FCA's Open Finance
   roadmap of 14 April 2026 names insurance as an in-scope sector but remains a vision
@@ -37,6 +40,9 @@ tags:
 - Open Finance
 - Insurance Intermediaries
 - Risk Data
+- Market Data
+- Reference Data
+- MiFID II
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.19'
@@ -70,7 +76,52 @@ apis:
     url: https://register.fca.org.uk/Developer/s/
   - type: Website
     url: https://register.fca.org.uk/s/
+  - type: DeveloperPortal
+    url: https://register.fca.org.uk/Developer/s/
+  - type: SignUp
+    url: https://register.fca.org.uk/Developer/ShAPI_LoginPage?ec=302&startURL=%2FDeveloper%2Fs%2F
+  - type: Authentication
+    url: authentication/fca-uk-authentication.yml
+  - type: RateLimits
+    url: rate-limits/fca-uk-rate-limits.yml
+- aid: fca-uk:fca-data-publication-api
+  name: FCA Data Publication API (FIRDS / FITRS)
+  description: >-
+    Anonymous machine-to-machine query interface over the file artefacts the FCA
+    publishes through data.fca.org.uk, documented in the FCA's own FIRDS and FITRS
+    technical specifications. It is an OpenSearch/Elasticsearch query-string search:
+    the index name is the resource and the FCA supports a documented subset of the
+    query_string DSL (q, from, size, sort, pretty, df, default_operator). Two indices
+    respond publicly — fca_data_firds_files, holding UK instrument reference data file
+    records under the UK MiFID regime that replaced ESMA FIRDS after Brexit, and
+    fca_data_fitrs_files, holding UK transparency calculation result files. Each record
+    carries download_link, file_type, file_name, publication_date, last_refreshed and,
+    for FITRS, instrument_type. No credentials are required and no OpenAPI is published;
+    every other index name probed returns 403 Missing Authentication Token. This is
+    markets reference data, not insurance data.
+  humanURL: https://data.fca.org.uk/#/download
+  baseURL: https://api.data.fca.org.uk
+  tags:
+  - Market Data
+  - Reference Data
+  - MiFID II
+  - Instrument Data
+  - Regulator
+  - United Kingdom
+  properties:
+  - type: Documentation
+    url: https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf
+  - type: APIReference
+    url: https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf
+  - type: Website
+    url: https://data.fca.org.uk/
+  - type: Authentication
+    url: authentication/fca-uk-authentication.yml
+  - type: RateLimits
+    url: rate-limits/fca-uk-rate-limits.yml
 common:
+- type: DomainSecurity
+  url: security/fca-uk-domain-security.yml
 - type: Website
   url: https://www.fca.org.uk/
 - type: Documentation
@@ -85,6 +136,40 @@ common:
   url: https://www.linkedin.com/company/financial-conduct-authority
 - type: Blog
   url: https://www.fca.org.uk/news
+- type: DeveloperPortal
+  url: https://register.fca.org.uk/Developer/s/
+- type: APIReference
+  url: https://register.fca.org.uk/Developer/s/
+- type: SignUp
+  url: https://register.fca.org.uk/Developer/ShAPI_LoginPage?ec=302&startURL=%2FDeveloper%2Fs%2F
+- type: Support
+  url: https://www.fca.org.uk/contact
+- type: TermsOfService
+  url: https://www.fca.org.uk/legal
+- type: PrivacyPolicy
+  url: https://www.fca.org.uk/privacy
+- type: Pricing
+  url: https://www.fca.org.uk/firms/financial-services-register/data-extract
+- type: Authentication
+  url: authentication/fca-uk-authentication.yml
+- type: Conventions
+  url: conventions/fca-uk-conventions.yml
+- type: ErrorCatalog
+  url: errors/fca-uk-problem-types.yml
+- type: RateLimits
+  url: rate-limits/fca-uk-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/fca-uk-lifecycle.yml
+- type: Conformance
+  url: conformance/fca-uk-conformance.yml
+- type: DataModel
+  url: data-model/fca-uk-data-model.yml
+- type: Packages
+  url: packages/fca-uk-packages.yml
+- type: WellKnown
+  url: well-known/fca-uk-well-known.yml
+- type: LLMsTxt
+  url: llms/fca-uk-llms.txt
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
