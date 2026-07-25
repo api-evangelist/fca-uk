@@ -1,0 +1,299 @@
+aid: fca-uk
+name: Financial Conduct Authority
+review:
+  question: Does the Financial Conduct Authority expose a real, public, self-serve
+    API surface for the UK insurance market?
+  answer: partial
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  homeMarket: United Kingdom
+  tier: market-infrastructure
+  sector: Insurance
+findings:
+  summary: |
+    The FCA is a regulator, not a carrier, and its record reflects that. It
+    operates exactly one genuine public API — the Financial Services Register
+    API — and no insurance product API of any kind. Registration for the
+    Register API is free and open to anyone, which makes it self-serve rather
+    than partner-gated, but the developer portal is a Salesforce Experience
+    Cloud login and every piece of reference documentation sits behind it. The
+    FCA publishes no OpenAPI or Swagger definition, no Postman collection, no
+    GraphQL endpoint, no AsyncAPI or webhook catalogue, and no SDK. Insurance
+    market data (General Insurance Value Measures) is released as XLSX
+    spreadsheets, not as an API. A search of fca.org.uk for "ACORD" returns
+    zero results. The FCA's Open Finance roadmap of 14 April 2026 names
+    insurance as an in-scope sector but is a vision document rather than a
+    rule, with the first formal discussion paper deferred to Q4 2026 — so
+    there is no UK open-insurance data-sharing obligation and therefore no
+    forcing function behind any FCA insurance API.
+  developerPortal:
+    url: https://register.fca.org.uk/Developer/s/
+    httpStatus: 200
+    classification: self-serve registration login wall
+    selfServe: true
+    partnerGated: false
+    referenceDocsPublic: false
+    note: |
+      Salesforce Experience Cloud site. GET https://register.fca.org.uk/Developer/s/
+      returns 200 but renders a login screen; www.fca.org.uk links to it as
+      /Developer/ShAPI_LoginPage?ec=302&startURL=%2FDeveloper%2Fs%2F, confirming
+      the ec=302 login redirect. Anyone may click "Register to be a New User" to
+      create an account and generate an API key free of charge, so this is a real
+      self-serve developer portal rather than a partner or agent gate — but no API
+      reference, no endpoint list and no schema is visible to an anonymous visitor.
+      The FCA states there is no SLA or uptime guarantee because the service is free.
+  portalProbes:
+    - url: https://developer.fca.org.uk
+      status: '000 (no DNS/connection)'
+    - url: https://developers.fca.org.uk
+      status: '000 (no DNS/connection)'
+    - url: https://docs.fca.org.uk
+      status: '000 (no DNS/connection)'
+    - url: https://api.fca.org.uk
+      status: '000 (no DNS/connection)'
+    - url: https://www.fca.org.uk/developers
+      status: '404'
+    - url: https://www.fca.org.uk/developer
+      status: '404'
+    - url: https://www.fca.org.uk/api
+      status: '404'
+    - url: https://www.fca.org.uk/partners
+      status: '404'
+    - url: https://www.fca.org.uk/integrations
+      status: '404'
+    - url: https://register.fca.org.uk/Developer/s/
+      status: '200 (login wall, self-serve registration)'
+    - url: https://register.fca.org.uk/Developer/ShAPI_LoginPage
+      status: '200 (login page)'
+    - url: https://www.fca.org.uk/firms/financial-services-register
+      status: '200 (public page describing the API and linking to the portal)'
+    - url: https://data.fca.org.uk/
+      status: '200 (FCA Registers/publication SPA, no developer documentation)'
+    - url: https://regdata.fca.org.uk
+      status: '200 (firm regulatory reporting system, login only, no public API docs)'
+    - url: https://handbook.fca.org.uk/
+      status: '200 (rulebook, HTML only, no API)'
+  openapi:
+    harvested: false
+    specsSaved: 0
+    note: |
+      No OpenAPI or Swagger document is published by the FCA. Every candidate
+      path was probed and none returned a parseable spec.
+    probes:
+      - url: https://register.fca.org.uk/openapi.json
+        status: '401'
+      - url: https://register.fca.org.uk/swagger.json
+        status: '401'
+      - url: https://register.fca.org.uk/api-docs
+        status: '404'
+      - url: https://register.fca.org.uk/services/V0.1/openapi.json
+        status: '403'
+      - url: https://register.fca.org.uk/services/V0.1/swagger.json
+        status: '403'
+      - url: https://register.fca.org.uk/Developer/s/openapi.json
+        status: '200 but returns the Salesforce HTML redirect shell (<!DOCTYPE HTML>), not a spec'
+      - url: https://api.data.fca.org.uk/openapi.json
+        status: '403 Missing Authentication Token'
+      - url: https://api.data.fca.org.uk/swagger.json
+        status: '403 Missing Authentication Token'
+      - url: https://data.fca.org.uk/openapi.json
+        status: '403'
+      - url: https://www.fca.org.uk/openapi.json
+        status: '404'
+  acord:
+    posture: no ACORD reference found
+    evidence: |
+      A site search at https://www.fca.org.uk/search-results?search_term=ACORD
+      returns "No search results for ACORD" (the site offers "Did you mean
+      accord?"). No FCA publication, Handbook chapter, consultation paper or
+      data release references ACORD, AL3, ACORD XML, ACORD certification or
+      NGDS. The FCA regulates conduct and reporting; it does not sponsor,
+      mandate or reference insurance data-interchange standards. UK market-wide
+      insurance data standards work sits with the London Market (Lloyd's
+      Blueprint Two, PPL, Whitespace), not with the regulator.
+  insuranceVerbs:
+    quote: not exposed
+    bind: not exposed
+    issue: not exposed
+    fnol: not exposed
+    audience: not applicable
+    note: |
+      The FCA is a regulator and underwrites nothing. None of the four
+      insurance API verbs exist on any FCA surface, and their absence is
+      correct rather than a gap. The only insurance-relevant data the FCA
+      exposes programmatically is authorisation status and permissions for
+      insurers, Lloyd's managing agents, MGAs, brokers and appointed
+      representatives, via the Financial Services Register API — a
+      counterparty-verification signal, not a transaction surface.
+  auth:
+    model: API key via custom request headers
+    scheme: X-Auth-Email plus X-Auth-Key headers on every request
+    obtainedVia: free self-serve registration at the FS Register developer portal
+    rateLimit: 50 requests per 10 seconds (stated on the FCA public page)
+    oauth:
+      wellKnownProbed: true
+      url: https://register.fca.org.uk/.well-known/openid-configuration
+      status: '200'
+      note: |
+        This document is served by the Salesforce Experience Cloud platform that
+        hosts the Register site (issuer https://register.fca.org.uk, authorization
+        endpoint /services/oauth2/authorize, token endpoint /services/oauth2/token,
+        and the standard Salesforce scope list including cdp_api, wave_api,
+        pardot_api, chatter_api). It governs login to the portal itself, not the
+        Register API, which authenticates by header key. It must not be read as an
+        FCA-designed OAuth surface.
+      oauthAuthorizationServerProbe:
+        url: https://register.fca.org.uk/.well-known/oauth-authorization-server
+        status: '401'
+      wwwWellKnownProbe:
+        url: https://www.fca.org.uk/.well-known/openid-configuration
+        status: '404'
+  webhooks:
+    present: false
+    asyncapi: false
+    note: No event catalogue, webhook documentation or AsyncAPI definition is
+      published anywhere on FCA properties. Absence is the finding.
+  postman:
+    present: false
+    note: No first-party FCA Postman collection or public workspace was found.
+  graphql:
+    present: false
+    note: No /graphql surface was found on fca.org.uk, register.fca.org.uk or
+      data.fca.org.uk.
+  grpc:
+    present: false
+    note: No published .proto files.
+  undocumentedButPublic:
+    - url: https://api.data.fca.org.uk/fca_data_firds_files
+      status: '200'
+      verified: '2026-07-25'
+      note: |
+        Confirmed live and anonymous. This is the Elasticsearch-backed JSON
+        endpoint behind the data.fca.org.uk download page for UK FIRDS
+        (Financial Instruments Reference Data System) file artefacts. A query of
+        ?q=*&pageSize=1 returns a standard Elasticsearch envelope with 11,583
+        hits over index fca-firds-downloadfiles, each hit carrying download_link,
+        file_type, file_name, publication_date and last_refreshed. It is markets
+        reference data, not insurance data. The FCA publishes NO documentation
+        for it, so it is deliberately excluded from apis[] in apis.yml — it is
+        recorded here as an observed fact only. Sibling index names probed
+        (fca_data_ssr_current, fca_data_firds_instruments, fca_data_dtr,
+        fca_data_rie) and the generic /search path all return 403 "Missing
+        Authentication Token".
+  thirdPartyEcosystem:
+    note: |
+      Third parties wrap the Register API — a Python client
+      (financial-services-register-api on ReadTheDocs), a Laravel client
+      (CyborgFinance/FCARegisterLaravel), and a Microsoft Power Platform
+      independent-publisher connector. None of these are FCA-published, so no
+      specification from them was harvested or attributed to the FCA.
+  bulkData:
+    name: Register Extract Service (RES)
+    url: https://www.fca.org.uk/firms/financial-services-register/data-extract
+    note: |
+      Paid bulk data. The FCA sells a subscription or one-off cut of the
+      Financial Services Register as a data extract, documented in the
+      "Financial Services Register Extract Service Subscribers' Handbook"
+      (April 2026). This is a file delivery product, not an API, and it is
+      the FCA's answer to the API's explicit design limitation of one entity
+      per lookup.
+  regulatoryContext:
+    openInsuranceMandate: false
+    note: |
+      There is no UK open-insurance obligation. The FCA published "Open finance:
+      our vision for a smart data future" on 14 April 2026, a roadmap to 2030
+      naming insurance among the products in scope, with SME credit and mortgages
+      as the first priorities. A formal discussion paper on the first scheme is
+      due Q4 2026 and the parallel open banking framework consultation before end
+      of 2026. Nothing is in force, so no FCA-mandated insurance API exists. UK
+      insurance data infrastructure of any real market scale is the London Market
+      programme (Lloyd's Blueprint Two, PPL, Whitespace, Ki), which is
+      broker-and-syndicate facing and outside the FCA's publishing surface.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://register.fca.org.uk/services/V0.1
+      documented: true
+      documentationPublic: false
+      note: |
+        Base URL and path shape confirmed first-party by an anonymous probe of
+        GET https://register.fca.org.uk/services/V0.1/Firm/122702, which returns
+        HTTP 403 with body {"Success":"false", "Sorry, this page is not
+        available. Missing Headers."} — the API rejecting the request for the
+        missing auth headers rather than 404ing the route.
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.data.fca.org.uk
+      documented: false
+      note: Undocumented Elasticsearch-style JSON search endpoint backing the
+        FCA data publication site; only the fca_data_firds_files index responds
+        anonymously.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket surface documented or observed.
+    - protocol: GraphQL
+      documented: false
+      note: No GraphQL surface documented or observed.
+sources:
+  - url: https://www.fca.org.uk/firms/financial-services-register
+    type: Documentation
+    status: '200'
+    note: Public page describing the FS Register API, the free developer portal
+      sign-up, the absence of an SLA, and the paid Register Extract Service.
+  - url: https://register.fca.org.uk/Developer/s/
+    type: APIReference
+    status: '200'
+    note: Developer portal. Salesforce login wall with self-serve registration;
+      no anonymous reference documentation.
+  - url: https://register.fca.org.uk/services/V0.1/Firm/122702
+    type: Endpoint
+    status: '403'
+    note: 'Anonymous probe returned {"Success":"false", "Sorry, this page is not
+      available. Missing Headers."} confirming the live base path and the header
+      authentication model.'
+  - url: https://register.fca.org.uk/.well-known/openid-configuration
+    type: WellKnown
+    status: '200'
+    note: Salesforce platform OIDC metadata for portal login, not the Register API.
+  - url: https://api.data.fca.org.uk/fca_data_firds_files
+    type: Endpoint
+    status: '200'
+    note: Undocumented public JSON endpoint returning FIRDS file artefact records.
+  - url: https://www.fca.org.uk/search-results?search_term=ACORD
+    type: SiteSearch
+    status: '200'
+    note: '"No search results for ACORD" — the basis for the no-ACORD finding.'
+  - url: https://www.fca.org.uk/data
+    type: Data
+    status: '200'
+    note: Data index. Lists General Insurance Value Measures data 2025, complaints
+      data, product sales data, MLAR and others. No API or machine-readable access
+      is offered for any of them.
+  - url: https://www.fca.org.uk/data/general-insurance-value-measures-data-2025
+    type: Data
+    status: '200'
+    note: The FCA's flagship insurance data release, published only as an XLSX
+      download (/publication/data/gi-value-measures-data-2025.xlsx).
+  - url: https://www.fca.org.uk/firms/financial-services-register/data-extract
+    type: Documentation
+    status: '200'
+    note: Register Extract Service — paid bulk file delivery, not an API.
+  - url: https://handbook.fca.org.uk/
+    type: Handbook
+    status: '200'
+    note: The FCA Handbook, including ICOBS for insurance conduct. HTML rulebook,
+      no API.
+actions:
+  apisListed: 1
+  openapiHarvested: false
+  specsSaved: 0
+  openapiDirectoryCreated: false
+  reason: |
+    One real, documented, self-serve API (the Financial Services Register API)
+    is recorded in apis.yml with its confirmed base URL and its public
+    documentation page. No OpenAPI directory was created because the FCA
+    publishes no specification and nothing verbatim could be harvested. The
+    undocumented api.data.fca.org.uk FIRDS endpoint was deliberately kept out
+    of apis[] because there is no FCA documentation page to point at, and
+    listing it would overstate the regulator's published API surface.

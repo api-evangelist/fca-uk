@@ -1,0 +1,90 @@
+aid: fca-uk
+url: https://raw.githubusercontent.com/api-evangelist/fca-uk/refs/heads/main/apis.yml
+name: Financial Conduct Authority
+kind: company
+description: >-
+  The Financial Conduct Authority (FCA) is the United Kingdom's conduct
+  regulator for around 42,000 financial services firms and the prudential regulator
+  for most non-bank firms, operating alongside the Prudential Regulation Authority
+  under the dual-regulation model. In insurance the FCA owns conduct regulation of
+  general insurance and protection markets through ICOBS and the Consumer Duty,
+  authorises and supervises insurers, Lloyd's managing agents, MGAs, brokers and
+  appointed representatives, and publishes market-wide insurance data such as the
+  annual General Insurance Value Measures. Its API posture is that of a regulator,
+  not a carrier: there is no open-insurance obligation in the UK and the FCA
+  publishes no insurance product API of its own. It does operate one genuine public
+  API — the Financial Services Register API at register.fca.org.uk/services/V0.1,
+  which exposes firm, individual and fund authorisation records including insurance
+  permissions and appointed-representative relationships. Access is free and
+  self-serve but the developer portal and its reference documentation sit behind a
+  Salesforce registration login, authentication is by X-Auth-Email and X-Auth-Key
+  headers, and no OpenAPI definition is published. Everything else the FCA publishes
+  for the insurance market is documents and spreadsheets: the Handbook, market
+  bulletins, consultation papers, and XLSX data releases. The FCA's Open Finance
+  roadmap of 14 April 2026 names insurance as an in-scope sector but remains a vision
+  document, with a formal discussion paper on the first scheme not due until Q4 2026,
+  so no insurance data-sharing API mandate exists. No ACORD reference appears
+  anywhere on fca.org.uk.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Insurance
+- United Kingdom
+- Regulator
+- Market Infrastructure
+- Financial Services
+- Public Register
+- Conduct Regulation
+- Open Finance
+- Insurance Intermediaries
+- Risk Data
+created: '2026-07-25'
+modified: '2026-07-25'
+specificationVersion: '0.19'
+apis:
+- aid: fca-uk:fca-financial-services-register-api
+  name: FCA Financial Services Register API
+  description: >-
+    Read-only REST API over the Financial Services Register, the FCA's
+    public record of authorised firms, individuals, funds and appointed
+    representatives. Resources are addressed by Firm Reference Number, Individual
+    Reference Number or Product Reference Number and expose sub-resources for names,
+    individuals, permissions, requirements, passports, regulators, appointed
+    representatives, addresses, waivers, exclusions and disciplinary history — the
+    permissions data being where insurance authorisations (insurance distribution,
+    insurance mediation, Lloyd's market activity) surface. Registration is free and
+    self-serve, but the developer portal and its reference documentation are behind a
+    Salesforce login; authentication is by X-Auth-Email and X-Auth-Key request
+    headers. No OpenAPI or Swagger definition is published by the FCA.
+  humanURL: https://register.fca.org.uk/Developer/s/
+  baseURL: https://register.fca.org.uk/services/V0.1
+  tags:
+  - Public Register
+  - Regulator
+  - Authorisation
+  - Firm Data
+  - United Kingdom
+  properties:
+  - type: Documentation
+    url: https://www.fca.org.uk/firms/financial-services-register
+  - type: APIReference
+    url: https://register.fca.org.uk/Developer/s/
+  - type: Website
+    url: https://register.fca.org.uk/s/
+common:
+- type: Website
+  url: https://www.fca.org.uk/
+- type: Documentation
+  url: https://www.fca.org.uk/firms/financial-services-register
+- type: Handbook
+  url: https://handbook.fca.org.uk/
+- type: Data
+  url: https://www.fca.org.uk/data
+- type: Registers
+  url: https://data.fca.org.uk/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/financial-conduct-authority
+- type: Blog
+  url: https://www.fca.org.uk/news
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
