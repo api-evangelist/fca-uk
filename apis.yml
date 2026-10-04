@@ -59,7 +59,7 @@ tags:
 - United Kingdom
 - Regulator
 - Market Infrastructure
-- Financial-Services
+- Financial Services
 - Public Register
 - Conduct Regulation
 - Open Finance
@@ -82,6 +82,7 @@ tags_raw:
 - Market Data
 - Reference Data
 - MiFID II
+- Financial-Services
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
