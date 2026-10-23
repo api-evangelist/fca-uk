@@ -1,0 +1,8 @@
+---
+title: "LIBOR/EURIBOR-related bans"
+url: "https://www.fca.org.uk/news/statements/libor-euribor-related-bans"
+date: "2026-10-17"
+author: "FCA"
+feed_url: "https://www.fca.org.uk/news/rss/"
+---
+The FCA has reviewed its regulatory action against individuals whose convictions have recently been overturned by the Court of Appeal.As these convictions formed the basis on which the FCA took its action, we have revoked the bans of Colin Bermingham, Philippe Moryoussef, Jonathan Mathew and Christian Bittar and removed the associated Final Notices from FCA channels.The FCA will take no further action against these individuals in relation to this matter.This follows our decision last year to discontinue proceedings against Tom Hayes and revoke Carlo Palombo’s ban after the Supreme Court quashe
