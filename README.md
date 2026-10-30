@@ -1,4 +1,4 @@
-# Financial Conduct Authority (fca-uk)
+# Financial Conduct Authority
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,100 +64,99 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Financial Conduct Authority (FCA) is the United Kingdom's conduct regulator for around 42,000 financial services firms and the prudential regulator for most non-bank firms, operating alongside the Prudential Regulation Authority under the dual-regulation model. In insurance the FCA owns conduct regulation of general insurance and protection markets through ICOBS and the Consumer Duty, authorises and supervises insurers, Lloyd's managing agents, MGAs, brokers and appointed representatives, and publishes market-wide insurance data such as the annual General Insurance Value Measures.
+The Financial Conduct Authority (FCA) is the United Kingdom's conduct regulator for around 42,000 financial services firms and the prudential regulator for most non-bank firms, operating alongside the Prudential Regulation Authority under the dual-regulation model. In insurance the FCA owns conduct regulation of general insurance and protection markets through ICOBS and the Consumer Duty, authorises and supervises insurers, Lloyd's managing agents, MGAs, brokers and appointed representatives, and publishes market-wide insurance data such as the annual General Insurance Value Measures. Its API posture is that of a regulator, not a carrier: there is no open-insurance obligation in the UK and the FCA publishes no insurance product API of its own. It does operate two genuine public APIs. The Financial Services Register API at register.fca.org.uk/services/V0.1 exposes firm, individual and fund authorisation records including insurance permissions and appointed-representative relationships; access is free and self-serve but the developer portal and its reference documentation sit behind a Salesforce registration login, and authentication is by X-Auth-Email and X-Auth-Key headers. The data publication API at api.data.fca.org.uk is an anonymous OpenSearch-style query interface over FIRDS and FITRS file artefacts, documented in the FCA's own published technical specifications — markets reference data, not insurance data. Neither API has an OpenAPI definition. Everything else the FCA publishes for the insurance market is documents and spreadsheets: the Handbook, market bulletins, consultation papers, and XLSX data releases. The FCA's Open Finance roadmap of 14 April 2026 names insurance as an in-scope sector but remains a vision document, with a formal discussion paper on the first scheme not due until Q4 2026, so no insurance data-sharing API mandate exists. No ACORD reference appears anywhere on fca.org.uk.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/fca-uk/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/fca-uk/refs/heads/main/apis.yml)
+**Areas:** Insurance · United Kingdom · Regulator · Market Infrastructure · Financial Services · Public Register · Conduct Regulation · Open Finance · Insurance Intermediaries · Risk Data · Market Data · Reference Data
 
-## Tags
+## Financial Conduct Authority on APIs.io
 
-- Insurance
-- United Kingdom
-- Regulator
-- Market Infrastructure
-- Financial Services
-- Public Register
-- Conduct Regulation
-- Open Finance
-- Insurance Intermediaries
-- Risk Data
+Everything profiled for Financial Conduct Authority is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/fca-uk/](https://apis.io/providers/fca-uk/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (2)
 
-- **Created:** 2026-07-25
-- **Modified:** 2026-07-25
+- [FCA Financial Services Register API](https://apis.io/apis/fca-uk/fca-financial-services-register-api/) — Read-only REST API over the Financial Services Register, the FCA's public record of authorised firms, individuals, funds and appointed representatives.…
+- [FCA Data Publication API (FIRDS / FITRS)](https://apis.io/apis/fca-uk/fca-data-publication-api/) — Anonymous machine-to-machine query interface over the file artefacts the FCA publishes through data.fca.org.uk, documented in the FCA's own FIRDS and FITRS…
 
-## APIs
+### Published properties
 
-### FCA Financial Services Register API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Read-only REST API over the Financial Services Register, the FCA's public record of authorised firms, individuals, funds and appointed representatives. Resources are addressed by Firm Reference Number, Individual Reference Number or Product Reference Number and expose sub-resources for names, individuals, permissions, requirements, passports, regulators, appointed representatives, addresses, waivers, exclusions and disciplinary history — the permissions data being where insurance authorisations (insurance distribution, insurance mediation, Lloyd's market activity) surface. Registration is free and self-serve, but the developer portal and its reference documentation are behind a Salesforce login; authentication is by `X-Auth-Email` and `X-Auth-Key` request headers. No OpenAPI or Swagger definition is published by the FCA.
+#### Security (2)
 
-- **Human URL:** [https://register.fca.org.uk/Developer/s/](https://register.fca.org.uk/Developer/s/)
-- **Base URL:** `https://register.fca.org.uk/services/V0.1`
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Tags
+- [Fca Uk Authentication](https://apis.io/security/fca-uk/fca-uk-authentication/)
+- [Fca Uk Domain Security](https://apis.io/security/fca-uk/fca-uk-domain-security/)
 
-- Public Register
-- Regulator
-- Authorisation
-- Firm Data
-- United Kingdom
+#### Rate limits (1)
 
-#### Properties
+Published request limits.
 
-- [Documentation](https://www.fca.org.uk/firms/financial-services-register)
-- [API Reference](https://register.fca.org.uk/Developer/s/)
-- [Website](https://register.fca.org.uk/s/)
+- [Fca Uk Rate Limits](https://apis.io/rate-limits/fca-uk/fca-uk-rate-limits/)
 
-### FCA Data Publication API (FIRDS / FITRS)
+## Where to find this API
 
-Anonymous machine-to-machine query interface over the file artefacts published through data.fca.org.uk, documented in the FCA's own FIRDS and FITRS technical specifications. It is an OpenSearch/Elasticsearch query-string search — the index name is the resource, and the FCA supports a documented subset of the query_string DSL (`q`, `from`, `size`, `sort`, `pretty`, `df`, `default_operator`). Two indices respond publicly: `fca_data_firds_files` (UK instrument reference data, 11,583 records) and `fca_data_fitrs_files` (UK transparency calculation results, 2,603 records). Every other index name probed returns 403. No credentials, no OpenAPI. Markets reference data, not insurance data.
-
-- **Human URL:** [https://data.fca.org.uk/#/download](https://data.fca.org.uk/#/download)
-- **Base URL:** `https://api.data.fca.org.uk`
-
-#### Properties
-
-- [Documentation — FCA FIRDS technical specification](https://www.fca.org.uk/publication/systems-information/fca-firds-tech-spec.pdf)
-- [API Reference — FCA FITRS technical specification](https://www.fca.org.uk/publication/systems-information/fca-fitrs-tech-spec.pdf)
-- [Website](https://data.fca.org.uk/)
-
-## Artifacts
-
-Captured by the API Evangelist enrichment pipeline on 2026-07-25. No OpenAPI, GraphQL, AsyncAPI, gRPC, webhook, SDK, CLI, sandbox, Postman collection, MCP server or agent skill exists on any FCA property, so none is fabricated here.
-
-- [Authentication profile](authentication/fca-uk-authentication.yml) — X-Auth-Email/X-Auth-Key on the Register API, anonymous on the data publication API
-- [API conventions](conventions/fca-uk-conventions.yml)
-- [Error catalog](errors/fca-uk-problem-types.yml) — observed error envelopes, not RFC 9457
-- [Rate limits](rate-limits/fca-uk-rate-limits.yml)
-- [Lifecycle](lifecycle/fca-uk-lifecycle.yml) — no SLA, no status page, no deprecation policy
-- [Conformance](conformance/fca-uk-conformance.yml)
-- [Data model](data-model/fca-uk-data-model.yml)
-- [Packages](packages/fca-uk-packages.yml) — community clients only; the FCA ships no SDK
-- [Well-known surface](well-known/fca-uk-well-known.yml) + [OIDC discovery](well-known/fca-uk-openid-configuration.json) (portal login, not the API)
-- [Domain security probe](security/fca-uk-domain-security.yml)
-- [llms.txt](llms/fca-uk-llms.txt)
-
-## Insurance API posture
-
-This is a regulator record, not a carrier record. The honest findings as of 2026-07-25:
-
-- **No insurance API.** The FCA publishes no quote, bind, issue or FNOL surface, and no insurance product or claims API. That is expected — it does not underwrite.
-- **Two real public APIs, neither about insurance products.** The Financial Services Register API is genuine, free and self-serve, but its documentation is behind a Salesforce registration login. The FIRDS/FITRS data publication API is anonymous and documented in FCA technical specifications, but it publishes markets reference data. Neither has an OpenAPI definition.
-- **No ACORD.** A site search of fca.org.uk for "ACORD" returns zero results. The FCA does not reference ACORD, AL3, ACORD XML or NGDS anywhere in its published material.
-- **No open-insurance mandate.** The FCA's *Open finance: our vision for a smart data future* roadmap (14 April 2026) names insurance as an in-scope sector, but it is a roadmap and not a rule; the formal discussion paper on the first scheme is not due until Q4 2026.
-- **Insurance data is spreadsheets.** General Insurance Value Measures data is published as XLSX downloads, not as an API.
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.fca.org.uk/)
 - [Documentation](https://www.fca.org.uk/firms/financial-services-register)
-- [Handbook](https://handbook.fca.org.uk/)
-- [Data](https://www.fca.org.uk/data)
-- [Registers](https://data.fca.org.uk/)
-- [LinkedIn](https://www.linkedin.com/company/financial-conduct-authority)
+- [API reference](https://register.fca.org.uk/Developer/s/)
+- [Pricing](https://www.fca.org.uk/firms/financial-services-register/data-extract)
+- [Sign up](https://register.fca.org.uk/Developer/ShAPI_LoginPage?ec=302&startURL=%2FDeveloper%2Fs%2F)
+- [Support](https://www.fca.org.uk/contact)
 - [Blog](https://www.fca.org.uk/news)
+- [Terms of service](https://www.fca.org.uk/legal)
+- [Privacy policy](https://www.fca.org.uk/privacy)
 
-## Maintainers
+## API Evangelist rating
 
-- **Kin Lane** — kin@apievangelist.com
+**Kin Score 29.9** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 45.2 |
+| Access clarity | 44.7 |
+
+**Agent readiness 16.2** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+
+**Regulatory alignment 23.1** — Securities & Market Data
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/fca-uk/](https://apis.io/providers/fca-uk/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Financial Conduct Authority: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/fca-uk/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
